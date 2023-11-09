@@ -6,7 +6,6 @@ const typeDefs = gql`
     name: String!
     price: Float!
     inventory: Int!
-    inCart: Boolean
   }
 
   type CartItem {
@@ -26,6 +25,7 @@ const typeDefs = gql`
   type Query {
     products: [Product]
     user(id: ID!): User
+    users: [User] # Ajout de cette requête pour récupérer tous les utilisateurs
   }
 
   type Mutation {
@@ -36,4 +36,3 @@ const typeDefs = gql`
 `;
 
 module.exports = typeDefs;
-

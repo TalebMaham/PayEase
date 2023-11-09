@@ -28,12 +28,23 @@ const resolvers = {
         });
       });
     },
+    users: () => {
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM User', (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+    },
   },
   Mutation: {
     addToCart: (parent, args) => {
       return new Promise((resolve, reject) => {
         // Supposons que vous ayez une table CartItems pour gérer les éléments du panier
-        db.query('INSERT INTO CartItems (userId, productId, quantity) VALUES (?, ?, ?)', [args.userId, args.productId, args.quantity], (error, results) => {
+        db.query('INSERT INTO CartItem (userId, productId, quantity) VALUES (?, ?, ?)', [args.userId, args.productId, args.quantity], (error, results) => {
           if (error) {
             reject(error);
           } else {

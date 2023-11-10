@@ -6,14 +6,43 @@ function Login({ setIsLoggedIn }) {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleLogin = () => {
-    // Vérifiez les informations d'authentification ici (par exemple, avec une API)
-    const isAuthenticated = true; // Remplacez par votre logique d'authentification
+  const handleLogin = async () => {
+    try {
+      const response = await fetch('http://localhost:4000/graphql', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          query: `
+            mutation LoginUser($username: String!, $password: String!) {
+              loginUser(username: $username, password: $password) {
+                id
+                username
+                email
+              }
+            }
+          `,
+          variables: {
+            username,
+            password,
+          },
+        }),
+      });
 
-    if (isAuthenticated) {
-      setIsLoggedIn(true); // Définir l'état d'authentification comme true
+      const data = await response.json();
+
+      if (data.errors) {
+        throw new Error(data.errors[0].message);
+      }
+
+      const user = data.data.loginUser;
+      setIsLoggedIn(true); // Mettre à jour l'état d'authentification
+      // Rediriger l'utilisateur vers la page souhaitée ici
       navigate('/'); // Rediriger vers la page d'accueil
-    } else {
+
+    } catch (error) {
+      console.error(error);
       alert('Échec de l\'authentification. Veuillez réessayer.');
     }
   };

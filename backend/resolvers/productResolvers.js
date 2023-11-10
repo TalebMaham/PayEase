@@ -80,6 +80,36 @@ const resolvers = {
         });
       });
     },
+
+    loginUser: async (parent, args) => {
+      const { username, password } = args;
+      try {
+        // Recherchez l'utilisateur dans la base de données par nom d'utilisateur et mot de passe
+        const [user] = await new Promise((resolve, reject) => {
+          db.query('SELECT * FROM User WHERE username = ? AND password = ?', [username, password], (error, results) => {
+            if (error) {
+              console.log("erreur apres la requette ..."); 
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          });
+        });
+
+        if (!user) {
+          throw new Error('Échec de l\'authentification');
+        }
+
+        // Ici, vous pouvez gérer l'état d'authentification, par exemple en stockant l'ID de l'utilisateur dans une session
+        // Vous devrez mettre en œuvre la gestion de session côté serveur (par exemple, avec Express.js) pour cela
+
+        return { ...user };
+      } catch (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    
   },
 };
 

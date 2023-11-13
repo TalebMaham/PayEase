@@ -1,68 +1,68 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate } from 'react-router-dom';
 
-function Login({ setIsLoggedIn }) {
+function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false); // Nouvel état pour vérifier l'authentification
 
-  const handleLogin = async () => {
+  const handleLogin = async (e) => {
+    e.preventDefault(); // Empêchez le comportement par défaut du formulaire
+
+    const requestBody = {
+      username: username,
+      password: password,
+    };
+
     try {
-      const response = await fetch('http://localhost:4000/graphql', {
+      const response = await fetch(`http://localhost:4000/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          query: `
-            mutation LoginUser($username: String!, $password: String!) {
-              loginUser(username: $username, password: $password) {
-                id
-                username
-                email
-              }
-            }
-          `,
-          variables: {
-            username,
-            password,
-          },
-        }),
+        body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
-
-      if (data.errors) {
-        throw new Error(data.errors[0].message);
+      if (response.status === 200) {
+        console.log(response.status); 
+        // Définir l'état isAuthenticated sur true
+        setIsAuthenticated(true);
+      } else {
+        // Gérez les erreurs ici
+        alert('Échec de l\'authentification. Veuillez réessayer.');
       }
-
-      const user = data.data.loginUser;
-      setIsLoggedIn(true); // Mettre à jour l'état d'authentification
-      // Rediriger l'utilisateur vers la page souhaitée ici
-      navigate('/'); // Rediriger vers la page d'accueil
-
     } catch (error) {
       console.error(error);
-      alert('Échec de l\'authentification. Veuillez réessayer.');
+      alert('Une erreur s\'est produite. Veuillez réessayer.');
     }
   };
+
+  // Si l'authentification est réussie, redirigez l'utilisateur vers la page d'accueil
+  if (isAuthenticated) {
+    console.log(isAuthenticated); 
+    return <Navigate to="/" />;
+  }
 
   return (
     <div>
       <h2>Connexion</h2>
-      <input
-        type="text"
-        placeholder="Nom d'utilisateur"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-      />
-      <input
-        type="password"
-        placeholder="Mot de passe"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
-      <button onClick={handleLogin}>Se connecter</button>
+      <form onSubmit={handleLogin}>
+        <input
+          type="text"
+          placeholder="Nom d'utilisateur"
+          name="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <input
+          type="password"
+          placeholder="Mot de passe"
+          name="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <button type="submit">Se connecter</button>
+      </form>
     </div>
   );
 }

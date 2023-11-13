@@ -14,26 +14,31 @@ const typeDefs = gql`
     quantity: Int!
   }
 
+  type Cart {
+    userId: ID!
+    items: [CartItem]!
+  }
+
   type User {
     id: ID!
     username: String!
     email: String!
-    password: String! # Ne renvoyez jamais le mot de passe en clair depuis le serveur GraphQL
-    cart: [CartItem]
+    password: String!
+    cart: Cart  # Modifier le champ "cart" pour utiliser le type "Cart"
   }
 
   type Query {
     products: [Product]
     user(id: ID!): User
-    users: [User] # Ajout de cette requête pour récupérer tous les utilisateurs
+    users: [User]
   }
 
   type Mutation {
     addToCart(userId: ID!, productId: Int!, quantity: Int!): User
     removeFromCart(userId: ID!, productId: Int!): User
     clearCart(userId: ID!): User
+    purchaseCart(userId: ID!): User  # Ajouter une mutation pour l'achat du panier
     loginUser(username: String!, password: String!): User
-    # Ajoutez la mutation loginUser qui prend un nom d'utilisateur et un mot de passe
   }
 `;
 

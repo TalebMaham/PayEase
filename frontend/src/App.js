@@ -3,42 +3,44 @@ import { BrowserRouter as Router, Routes, Route, Link, Navigate } from 'react-ro
 import ProductList from './ProductList';
 import UserList from './UserList';
 import Login from './Login';
-import Cart from './Cart';
 
-// Définissez l'URL de votre backend
-const backendURL = 'http://localhost:4000'; // Remplacez par l'URL de votre serveur backend
+const backendURL = 'http://localhost:4000';
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(null);
+
+  const checkAuthentication = async () => {
+    try {
+      const response = await fetch(`${backendURL}/check-auth`, {
+        method: 'GET',
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setIsAuthenticated(data.isAuthenticated);
+      } else {
+        setIsAuthenticated(false);
+      }
+    } catch (error) {
+      console.error(error);
+      setIsAuthenticated(false);
+    }
+  };
 
   useEffect(() => {
-    // Effectuez une requête vers le backend pour vérifier l'état d'authentification de l'utilisateur
-    fetch(`${backendURL}/check-auth`, {
-      method: 'GET',
-      credentials: 'include', // Inclure les cookies si nécessaire
-    })
-      .then((response) => {
-        if (response.ok) {
-          setIsLoggedIn(true);
-        } else {
-          setIsLoggedIn(false);
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-        setIsLoggedIn(false);
-      });
+    checkAuthentication();
   }, []);
 
   const handleLogout = async () => {
     try {
       const response = await fetch(`${backendURL}/logout`, {
         method: 'GET',
-        credentials: 'include', // Inclure les cookies si nécessaire
+        credentials: 'include',
       });
 
       if (response.ok) {
-        setIsLoggedIn(false); // Définissez l'état isLoggedIn sur false après la déconnexion réussie
+        setIsAuthenticated(false);
       } else {
         console.error('Échec de la déconnexion');
       }
@@ -50,7 +52,6 @@ function App() {
   return (
     <Router>
       <div>
-        {/* Barre de navigation */}
         <nav>
           <ul>
             <li>
@@ -59,7 +60,9 @@ function App() {
             <li>
               <Link to="/users">Utilisateurs</Link>
             </li>
-            {isLoggedIn ? (
+            {isAuthenticated === null ? (
+              <li>Loading...</li>
+            ) : isAuthenticated ? (
               <li>
                 <button onClick={handleLogout}>Déconnexion</button>
               </li>
@@ -68,18 +71,16 @@ function App() {
                 <Link to="/login">Connexion</Link>
               </li>
             )}
-            {/* ... (autres liens de navigation) */}
           </ul>
         </nav>
 
         <Routes>
           <Route
             path="/"
-            element={isLoggedIn ? <ProductList /> : <Navigate to="/login" />}
+            element={isAuthenticated === null ? null : isAuthenticated ? <ProductList /> : <Navigate to="/login" />}
           />
           <Route path="/users" element={<UserList />} />
-          <Route path="/login" element={<Login />} />
-          {/* ... (autres routes) */}
+          <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} />
         </Routes>
       </div>
     </Router>

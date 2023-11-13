@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function Login() {
+function Login({ setIsAuthenticated }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [isAuthenticated, setIsAuthenticated] = useState(false); // Nouvel état pour vérifier l'authentification
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
-    e.preventDefault(); // Empêchez le comportement par défaut du formulaire
+    e.preventDefault();
 
     const requestBody = {
       username: username,
@@ -22,13 +22,12 @@ function Login() {
         },
         body: JSON.stringify(requestBody),
       });
-
       if (response.status === 200) {
-        console.log(response.status); 
-        // Définir l'état isAuthenticated sur true
+        // L'authentification a réussi, mettez à jour isAuthenticated dans App.js
         setIsAuthenticated(true);
+        // Redirigez l'utilisateur vers la page d'accueil
+        navigate('/');
       } else {
-        // Gérez les erreurs ici
         alert('Échec de l\'authentification. Veuillez réessayer.');
       }
     } catch (error) {
@@ -36,12 +35,6 @@ function Login() {
       alert('Une erreur s\'est produite. Veuillez réessayer.');
     }
   };
-
-  // Si l'authentification est réussie, redirigez l'utilisateur vers la page d'accueil
-  if (isAuthenticated) {
-    console.log(isAuthenticated); 
-    return <Navigate to="/" />;
-  }
 
   return (
     <div>

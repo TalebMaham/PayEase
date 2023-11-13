@@ -48,6 +48,7 @@ app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
 // Route pour gérer la soumission du formulaire de connexion
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
+  console.log(req.body); 
   // Exécutez une requête SQL pour vérifier les identifiants
   db.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, results) => {
     if (err) {
@@ -55,12 +56,12 @@ app.post('/login', (req, res) => {
       res.sendStatus(500);
       return;
     }
-
+    
     if (results.length > 0) {
       const user = results[0];
       req.session.authenticated = true;
-      req.session.user = user;
-
+      req.session.user = user;   
+   
       // Redirigez vers la page d'accueil du frontend (port 3000)
       res.status(200).send('Identifiants corrects');
     } else {

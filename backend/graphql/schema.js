@@ -24,13 +24,13 @@ const typeDefs = gql`
     username: String!
     email: String!
     password: String!
-    cart: Cart  # Modifier le champ "cart" pour utiliser le type "Cart"
   }
 
   type Query {
     products: [Product]
     user(id: ID!): User
     users: [User]
+    userCart(userId: ID!): Cart
   }
 
   type Mutation {

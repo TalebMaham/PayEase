@@ -18,21 +18,6 @@ app.use(
   })
 );
 
-const server = new ApolloServer({ typeDefs, resolvers });
-
-async function startServer() {
-  await server.start();
-  server.applyMiddleware({ app });
-}
-
-startServer().then(() => {
-  const httpServer = require('http').createServer(app);
-
-  httpServer.listen(port, () => {
-    console.log(`Serveur HTTP prêt à l'écoute sur le port ${port}`);
-  });
-});
-
 // Configurez votre connexion à la base de données MySQL
 const db = mysql.createConnection({
   host: 'localhost',
@@ -41,14 +26,29 @@ const db = mysql.createConnection({
   database: 'products',
 });
 
-app.use(express.json()); // Ajout de la prise en charge du JSON dans les requêtes
+// Middleware pour la gestion des requêtes JSON
+app.use(express.json());
 
+// Middleware CORS
 app.use(cors({ origin: 'http://localhost:3000', credentials: true }));
+
+// Apollo Server
+const server = new ApolloServer({ typeDefs, resolvers });
+
+async function startServer() {
+  await server.start();
+  server.applyMiddleware({ app });
+}
+
+startServer().then(() => {
+  app.listen(port, () => {
+    console.log(`Serveur GraphQL prêt à l'écoute sur http://localhost:${port}/graphql`);
+  });
+});
 
 // Route pour gérer la soumission du formulaire de connexion
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  console.log(req.body); 
   // Exécutez une requête SQL pour vérifier les identifiants
   db.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, results) => {
     if (err) {
@@ -56,12 +56,11 @@ app.post('/login', (req, res) => {
       res.sendStatus(500);
       return;
     }
-    
+
     if (results.length > 0) {
       const user = results[0];
       req.session.authenticated = true;
-      req.session.user = user;   
-   
+      req.session.user = user;
       // Redirigez vers la page d'accueil du frontend (port 3000)
       res.status(200).send('Identifiants corrects');
     } else {
@@ -70,6 +69,7 @@ app.post('/login', (req, res) => {
   });
 });
 
+// Route pour la vérification de l'authentification
 app.get('/check-auth', (req, res) => {
   if (req.session.authenticated) {
     // L'utilisateur est authentifié, renvoyez une réponse avec isAuthenticated: true
@@ -84,5 +84,5 @@ app.get('/check-auth', (req, res) => {
 app.get('/logout', (req, res) => {
   req.session.authenticated = false;
   req.session.user = null;
-  res.status(200).send('Deconnexion');
+  res.status(200).send('Déconnexion');
 });

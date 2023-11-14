@@ -39,13 +39,64 @@ const resolvers = {
         });
       });
     },
+    userCart: (parent, args) => {
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM CartItems WHERE userId = ?', [args.userId], async (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            // Rassemblez les éléments du panier à partir des résultats de la requête
+            const cartItems = [];
+
+            for (const row of results) {
+              // Récupérez les détails du produit associé à cet élément du panier
+              const [productInfo] = await new Promise((resolve, reject) => {
+                db.query('SELECT * FROM Products WHERE id = ?', [row.productId], (error, productResults) => {
+                  if (error) {
+                    reject(error);
+                  } else {
+                    resolve(productResults);
+                  }
+                });
+              });
+
+              if (!productInfo) {
+                // Le produit associé n'a pas été trouvé, vous pouvez gérer cette situation comme vous le souhaitez
+                continue;
+              }
+
+              const cartItem = {
+                id: row.id,
+                quantity: row.quantity,
+                product: {
+                  id: productInfo.id,
+                  name: productInfo.name,
+                  price: productInfo.price,
+                  inventory: productInfo.inventory,
+                },
+              };
+
+              cartItems.push(cartItem);
+            }
+
+            // Créez un objet Cart avec les éléments du panier
+            const cart = {
+              userId: args.userId,
+              items: cartItems,
+            };
+
+            resolve(cart);
+          }
+        });
+      });
+    },
   },
   Mutation: {
     addToCart: (parent, args) => {
       return new Promise((resolve, reject) => {
         // Supposons que vous ayez une table CartItems pour gérer les éléments du panier
         db.query(
-          'INSERT INTO CartItem (userId, productId, quantity) VALUES (?, ?, ?)',
+          'INSERT INTO CartItems (userId, productId, quantity) VALUES (?, ?, ?)',
           [args.userId, args.productId, args.quantity],
           (error, results) => {
             if (error) {
@@ -88,104 +139,91 @@ const resolvers = {
         });
       });
     },
-    purchaseCart: (parent, args) => {
-      return new Promise(async (resolve, reject) => {
-        const { userId } = args;
-        try {
-          // Récupérez le contenu du panier de l'utilisateur
-          const [cart] = await new Promise((resolve, reject) => {
-            db.query('SELECT * FROM CartItems WHERE userId = ?', [userId], (error, results) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(results);
-              }
-            });
-          });
-    
-          if (!cart) {
-            throw new Error('Aucun panier trouvé');
+    purchaseCart: async (parent, args) => {
+      const { userId } = args;
+
+      // Étape 1: Récupérez le contenu du panier de l'utilisateur
+      const cartItems = await new Promise((resolve, reject) => {
+        db.query('SELECT * FROM CartItems WHERE userId = ?', [userId], (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
           }
-    
-          // Parcourez les éléments du panier pour vérifier la disponibilité des produits
-          for (const item of cart) {
-            const productId = item.productId;
-            const quantityInCart = item.quantity;
-    
-            // Récupérez la quantité disponible du produit dans la base de données
-            const [product] = await new Promise((resolve, reject) => {
-              db.query('SELECT inventory FROM Products WHERE id = ?', [productId], (error, results) => {
-                if (error) {
-                  reject(error);
-                } else {
-                  resolve(results);
-                }
-              });
-            });
-    
-            if (!product) {
-              throw new Error(`Produit avec l'ID ${productId} introuvable`);
-            }
-    
-            const availableQuantity = product.inventory;
-    
-            // Vérifiez si la quantité dans le panier est disponible en stock
-            if (quantityInCart > availableQuantity) {
-              throw new Error(`Quantité insuffisante pour le produit avec l'ID ${productId}`);
-            }
-          }
-    
-          // Si toutes les vérifications passent, effectuez l'achat en mettant à jour le stock des produits
-          for (const item of cart) {
-            const productId = item.productId;
-            const quantityInCart = item.quantity;
-    
-            // Mettez à jour la quantité disponible du produit dans la base de données
-            await new Promise((resolve, reject) => {
-              db.query(
-                'UPDATE Products SET inventory = inventory - ? WHERE id = ?',
-                [quantityInCart, productId],
-                (error, results) => {
-                  if (error) {
-                    reject(error);
-                  } else {
-                    resolve(results);
-                  }
-                }
-              );
-            });
-          }
-    
-          // Supprimez les éléments du panier après l'achat
-          await new Promise((resolve, reject) => {
-            db.query('DELETE FROM CartItem WHERE userId = ?', [userId], (error, results) => {
-              if (error) {
-                reject(error);
-              } else {
-                resolve(results);
-              }
-            });
-          });
-    
-          // Retournez l'utilisateur mis à jour
-          const updatedUser = await new Promise((resolve, reject) => {
-            db.query('SELECT * FROM Users WHERE id = ?', [userId], (error, results) => {
-              if (error) {
-                reject(error);
-              } else if (results.length === 0) {
-                reject(new Error('Utilisateur introuvable'));
-              } else {
-                resolve(results[0]);
-              }
-            });
-          });
-    
-          resolve(updatedUser);
-        } catch (error) {
-          reject(error);
-        }
+        });
       });
+
+      if (!cartItems || cartItems.length === 0) {
+        throw new Error('Aucun panier trouvé');
+      }
+
+      // Étape 2: Vérifiez la disponibilité des produits dans le panier
+      for (const cartItem of cartItems) {
+        const productId = cartItem.productId;
+        const quantityInCart = cartItem.quantity;
+
+        const [product] = await new Promise((resolve, reject) => {
+          db.query('SELECT inventory FROM Products WHERE id = ?', [productId], (error, results) => {
+            if (error) {
+              reject(error);
+            } else {
+              resolve(results);
+            }
+          });
+        });
+
+        if (!product || quantityInCart > product.inventory) {
+          throw new Error(`Quantité insuffisante pour un produit dans le panier`);
+        }
+      }
+
+      // Étape 3: Effectuez l'achat en mettant à jour le stock des produits
+      for (const cartItem of cartItems) {
+        const productId = cartItem.productId;
+        const quantityInCart = cartItem.quantity;
+
+        await new Promise((resolve, reject) => {
+          db.query(
+            'UPDATE Products SET inventory = inventory - ? WHERE id = ?',
+            [quantityInCart, productId],
+            (error, results) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(results);
+              }
+            }
+          );
+        });
+      }
+
+      // Étape 4: Supprimez les éléments du panier après l'achat
+      await new Promise((resolve, reject) => {
+        db.query('DELETE FROM CartItems WHERE userId = ?', [userId], (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
+        });
+      });
+
+      // Étape 5: Retournez l'utilisateur mis à jour
+      const [updatedUser] = await new Promise((resolve, reject) => {
+        db.query('SELECT * FROM Users WHERE id = ?', [userId], (error, results) => {
+          if (error) {
+            reject(error);
+          } else if (results.length === 0) {
+            reject(new Error('Utilisateur introuvable'));
+          } else {
+            resolve(results);
+          }
+        });
+      });
+
+      return updatedUser;
     },
+  
     
     loginUser: async (parent, args) => {
       const { username, password } = args;

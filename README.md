@@ -62,7 +62,10 @@ Le fichier `Login.js` est un composant essentiel de l'application frontend qui g
 
 4. **Gestion des Erreurs** : Le composant `Login.js` gère également les erreurs potentielles en cas d'échec de l'authentification ou en cas d'erreur lors de la requête vers l'API backend. Il affiche des messages d'erreur appropriés à l'utilisateur en cas de problème.
 
-![Bradly](gestion_err_auth.png)
+<div align="center">
+  <img src="gestion_err_auth.png" alt=" L'authentification a echoué probleme de mots de passe " />
+  <p style="text-align: center;"></p>
+</div>
 
 5. **Saisie Contrôlée** : Les champs de saisie du nom d'utilisateur et du mot de passe sont des champs de saisie contrôlée, ce qui signifie que leur valeur est gérée par l'état du composant et mise à jour en fonction des modifications de l'utilisateur.
 
@@ -77,7 +80,11 @@ Le fichier `Product.js` représente un composant de l'application frontend qui p
 
 2. **Saisie de la Quantité** : Les utilisateurs peuvent spécifier la quantité du produit qu'ils souhaitent ajouter au panier en utilisant un champ de saisie numérique.
 
-![Bradly](definir_stock.png)
+
+<div align="center">
+  <img src="definir_stock.png" alt="Vous pouvez definir la quantité a ajouter dans le panier" />
+  <p style="text-align: center;"></p>
+</div>
 
 
 3. **Ajout au Panier** : Lorsque l'utilisateur appuie sur le bouton "Ajouter au panier", le composant envoie une requête GraphQL au serveur backend pour ajouter le produit au panier. Il gère également l'affichage d'une alerte pour indiquer que le produit a été ajouté avec succès.
@@ -104,7 +111,10 @@ Le fichier `ProductList.js` représente un composant de l'application frontend q
 
 5. **Utilisation du Composant Product** : Le composant `ProductList.js` utilise le composant `Product` pour afficher chaque produit de manière répétée.
 
-![Bradly](liste_des_produits.png)
+<div align="center">
+  <img src="liste_des_produits.png" alt="Liste de vos produits chargé depuis la base de donnée" />
+  <p style="text-align: center;"></p>
+</div>
 
 # Documentation du Code - Frontend (Cart.js)
 
@@ -121,11 +131,19 @@ Le fichier `Cart.js` représente un composant de l'application frontend qui affi
 
 4. **Calcul du Prix Total** : Le composant calcule le prix total à payer en fonction de la quantité de chaque produit dans le panier et affiche ce prix total.
 
-![Bradly](panier.png)
+<div align="center">
+  <img src="panier.png" alt="Le panier" />
+  <p style="text-align: center;"></p>
+</div>
+
 
 5. **Achat des Paniers** : Pour chaque panier, l'utilisateur peut cliquer sur le bouton "Acheter" pour finaliser l'achat. Le composant envoie une requête GraphQL pour effectuer l'achat.
 
-![Bradly](achat_effectué.png)
+
+<div align="center">
+  <img src="achat_effectué.png" alt="Apres avoir effectué l'achat le panier sera automatiquement vider" />
+  <p style="text-align: center;"></p>
+</div>
 
 6. **Gestion des Erreurs** : Le composant `Cart.js` gère les erreurs potentielles lors de la récupération des données et de l'achat, en affichant des messages d'erreur appropriés.
 

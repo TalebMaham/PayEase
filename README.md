@@ -312,6 +312,32 @@ Les résolveurs utilisent des requêtes SQL pour interagir avec la base de donn�
 
 Les résolveurs assurent également la manipulation des données et la gestion des erreurs lors de l'interaction avec la base de données.
 
+## Démarrage de l'Application
+
+Pour lancer l'application, suivez ces étapes :
+
+```bash
+# Backend
+1. Accédez au dossier backend.
+
+2. Exécutez la commande suivante pour installer les dépendances :
+   npm install
+
+3. Ensuite, démarrez le serveur backend en exécutant la commande :
+   node server.js
+
+
+# Frontend
+1. Accédez au dossier frontend.
+
+2. Exécutez la commande suivante pour installer les dépendances :
+   npm install
+
+3. Ensuite, démarrez l'application frontend en exécutant la commande :
+   npm start
+
+
+
 Cordialement,
 
 Sidi TALEB

@@ -350,7 +350,7 @@ Une fois la base de données "products" créée, assurez-vous d'être dans le r�
 
 Lancez le script d'initialisation en exécutant le fichier "initialisation.bat". Ce script chargera les données initiales dans la base de données, y compris les produits et un utilisateur prêt à être authentifié.
 
-# Exécutez le script d'initialisation depuis le répertoire backend
+# Exécutez le script d'initialisation depuis le répertoire baradly
 initialisation.bat
 
 À présent, la base de données "products" est remplie avec des produits simulés, et un utilisateur préconfiguré est disponible pour l'authentification dans l'application.
@@ -392,7 +392,16 @@ Voici un scénario typique que vous pouvez suivre pour tester l'application :
 
 Ceci conclut le scénario nominal de test de l'application.
 
+Remarque : 
+## Remarques sur l'Application
 
+L'application actuelle est fonctionnelle mais présente des opportunités d'amélioration. Il est important de noter que le développement de l'application a été réalisé dans un cadre limité en termes de temps et de ressources. Par conséquent, certaines fonctionnalités ou améliorations prévues n'ont pas encore été pleinement implémentées.
+
+Mon intention était de créer une application de base pour la gestion de produits et de paniers, avec une fonctionnalité d'authentification rudimentaire. Cependant, en raison de contraintes de temps, certaines fonctionnalités, telles que la gestion complète des utilisateurs et la mise en œuvre de tests automatisés, n'ont pas été finalisées.
+
+Je suis pleinement conscient des lacunes de l'application, mais je tiens à assurer aux utilisateurs que je reste déterminé à l'améliorer au fil du temps. Vos retours et commentaires seront précieux pour guider les futures mises à jour et améliorations de l'application.
+
+L'un des composants, "User.js", devait initialement servir de base pour la gestion des utilisateurs, notamment les gestionnaires internes et les clients externes. Cependant, en raison des contraintes de temps, cette fonctionnalité n'a pas encore été pleinement développée.
 
 
 Cordialement,

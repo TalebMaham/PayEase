@@ -18,7 +18,7 @@ J'ai implémenté les fonctionnalités suivantes dans l'application :
 
 2. **Page de Paiement** : Une fois les produits ajoutés au panier, les utilisateurs peuvent se diriger vers une page de paiement où ils peuvent finaliser la commande.
 
-3. **Commandes** : Après avoir passé une commande, une entrée est automatiquement créée dans la base de données, enregistrant le prix total de la commande ainsi que les détails de chaque article de la commande. De plus, le stock de produits est mis à jour pour refléter les produits achetés.
+3. **Commandes** : Après avoir passé une commande, le stock de produits est mis à jour pour refléter les produits achetés.
 
 
 # Documentation du Code - Frontend (App.js)

@@ -1,106 +1,131 @@
 import React, { useEffect, useState } from 'react';
 
-function Cart({ user }) {
-  const [cart, setCart] = useState([]);
-  const [totalPrice, setTotalPrice] = useState(0);
+function Cart() {
+  const [carts, setCarts] = useState([]);
 
   useEffect(() => {
-    if (user && user.cart) {
-      const cartId = user.cart.id;
-      // Utilisez une requête GraphQL pour récupérer les données du panier de l'utilisateur
-      fetch('http://localhost:4000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `
-            query GetCart($cartId: ID!) {
-              user(id: $cartId) {
-                cart {
-                  items {
-                    id
-                    product {
-                      name
-                      price
-                    }
-                    quantity
-                  }
-                }
+    // Utilisez une requête GraphQL pour récupérer la liste de tous les paniers
+    fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetAllCarts {
+            allCarts {
+              userId
+              items {
+                id
+                quantity
               }
             }
-          `,
-          variables: {
-            cartId,
-          },
-        }),
+          }
+        `,
+      }),
+    })
+      .then((response) => response.json())
+      .then(async (data) => {
+        const updatedCarts = await Promise.all(
+          data.data.allCarts.map(async (cart) => {
+            const updatedItems = await Promise.all(
+              cart.items.map(async (item) => {
+                const productInfo = await fetchProductInfo(item.id);
+                return {
+                  id: item.id,
+                  quantity: item.quantity,
+                  product: productInfo,
+                };
+              })
+            );
+            return { ...cart, items: updatedItems };
+          })
+        );
+        setCarts(updatedCarts);
       })
-        .then((response) => response.json())
-        .then((data) => {
-          setCart(data.data.user.cart.items);
-          calculateTotalPrice(data.data.user.cart.items);
-        })
-        .catch((error) => console.error('Erreur lors de la récupération du panier', error));
-    }
-  }, [user]);
+      .catch((error) => console.error('Erreur lors de la récupération des paniers', error));
+  }, []);
 
-  const calculateTotalPrice = (cartItems) => {
-    const totalPrice = cartItems.reduce((total, item) => {
-      return total + item.product.price * item.quantity;
-    }, 0);
-    setTotalPrice(totalPrice);
+  const fetchProductInfo = async (productId) => {
+    const response = await fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          query GetProductInfo($productId: Int!) {
+            product(id: $productId) {
+              name
+              price
+            }
+          }
+        `,
+        variables: { productId },
+      }),
+    });
+    const data = await response.json();
+    return data.data.product;
   };
 
-  const handlePurchase = () => {
-    if (user && user.cart) {
-      const cartId = user.cart.id;
-      // Utilisez une requête GraphQL pour effectuer l'achat du panier
-      fetch('http://localhost:4000/graphql', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          query: `
-            mutation PurchaseCart($cartId: ID!) {
-              purchaseCart(userId: $cartId) {
-                id
-                cart {
-                  items {
-                    id
-                  }
-                }
-              }
+  const getTotalPrice = (items) => {
+    let total = 0;
+    items.forEach((item) => {
+      total += item.product.price * item.quantity;
+    });
+    return total.toFixed(2); // Arrondir le total à deux décimales
+  };
+
+  const handlePurchase = (userId) => {
+    // Utilisez une requête GraphQL pour effectuer l'achat
+    fetch('http://localhost:4000/graphql', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        query: `
+          mutation PurchaseCart($userId: ID!) {
+            purchaseCart(userId: $userId) {
+              id
             }
-          `,
-          variables: {
-            cartId,
-          },
-        }),
+          }
+        `,
+        variables: { userId },
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        // Traitez la réponse ici, par exemple, affichez un message de confirmation
+        console.log('Achat effectué avec succès!', data);
       })
-        .then((response) => response.json())
-        .then((data) => {
-          // Traitez la réponse du serveur après l'achat du panier
-          // Mettez à jour l'état local de l'utilisateur si nécessaire
-          setCart([]);
-          setTotalPrice(0);
-        })
-        .catch((error) => console.error('Erreur lors de l\'achat du panier', error));
-    }
+      .catch((error) => console.error('Erreur lors de l\'achat', error));
   };
 
   return (
     <div>
-      <h2>Panier</h2>
-      <ul>
-        {cart.map((item) => (
-          <li key={item.id}>
-            {item.product.name} x {item.quantity} - {item.product.price * item.quantity} $
-          </li>
-        ))}
-      </ul>
-      <p>Total à payer : {totalPrice} $</p>
-      <button onClick={handlePurchase}>Acheter</button>
+      <h2>Liste de Paniers</h2>
+      {carts.map((cart) => (
+        <div key={cart.userId} className="card">
+          <div className="card-body">
+            <h3 className="card-title">Panier de l'utilisateur {cart.userId}</h3>
+            <ul className="list-group">
+              {cart.items.map((item) => (
+                <li key={item.id} className="list-group-item">
+                  {item.product.name} x {item.quantity} - {item.product.price * item.quantity} $
+                </li>
+              ))}
+            </ul>
+            <p style={{ color: 'red' }}>Totale à payer: {getTotalPrice(cart.items)} $</p>
+            <button
+              className="btn btn-primary"
+              onClick={() => handlePurchase(cart.userId)}
+            >
+              Acheter
+            </button>
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

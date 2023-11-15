@@ -90,6 +90,65 @@ const resolvers = {
         });
       });
     },
+    product: (parent, args) => {
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM Products WHERE id = ?', [args.id], (error, results) => {
+          if (error) {
+            reject(error);
+          } else if (results.length === 0) {
+            resolve(null); // Aucun produit trouvé
+          } else {
+            const product = results[0];
+            // Vous pouvez formater les données ici si nécessaire
+            resolve(product);
+          }
+        });
+      });
+    },
+    
+    allCarts: () => {
+      return new Promise((resolve, reject) => {
+        db.query('SELECT * FROM Users', (error, userResults) => {
+          if (error) {
+            reject(error);
+          } else {
+            const allCarts = userResults.map((user) => {
+              return {
+                userId: user.id,
+                items: [],
+              };
+            });
+
+            // Fetch cart items for each user
+            Promise.all(
+              userResults.map((user) => {
+                return new Promise((resolve, reject) => {
+                  db.query('SELECT * FROM CartItems WHERE userId = ?', [user.id], (error, results) => {
+                    if (error) {
+                      reject(error);
+                    } else {
+                      resolve({ userId: user.id, items: results });
+                    }
+                  });
+                });
+              })
+            )
+              .then((cartItems) => {
+                cartItems.forEach((cartItem) => {
+                  const cart = allCarts.find((cart) => cart.userId === cartItem.userId);
+                  if (cart) {
+                    cart.items = cartItem.items;
+                  }
+                });
+                resolve(allCarts);
+              })
+              .catch((error) => {
+                reject(error);
+              });
+          }
+        });
+      });
+    },
   },
   Mutation: {
     addToCart: (parent, args) => {

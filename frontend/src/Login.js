@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 function Login({ setIsAuthenticated }) {
@@ -37,25 +37,35 @@ function Login({ setIsAuthenticated }) {
   };
 
   return (
-    <div>
-      <h2>Connexion</h2>
-      <form onSubmit={handleLogin}>
-        <input
-          type="text"
-          placeholder="Nom d'utilisateur"
-          name="username"
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Mot de passe"
-          name="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit">Se connecter</button>
-      </form>
+    <div className="container">
+      <div className="row justify-content-center">
+        <div className="col-md-6">
+          <h2 className="text-center">Connexion</h2>
+          <form onSubmit={handleLogin}>
+            <div className="form-group">
+              <input
+                type="text"
+                className="form-control"
+                placeholder="Nom d'utilisateur"
+                name="username"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <input
+                type="password"
+                className="form-control"
+                placeholder="Mot de passe"
+                name="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
+            </div>
+            <button type="submit" className="btn btn-primary btn-block">Se connecter</button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 }

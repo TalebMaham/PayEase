@@ -8,12 +8,7 @@ CREATE TABLE Users (
 
 INSERT INTO Users (id, username, email, password)
 VALUES
-  (1, 'utilisateur1', 'utilisateur1@gmail.com', 'motdepasse1'),
-  (2, 'utilisateur2', 'utilisateur2@gmail.com', 'motdepasse2'),
-  (3, 'utilisateur3', 'utilisateur3@gmail.com', 'motdepasse3'),
-  (4, 'utilisateur4', 'utilisateur4@gmail.com', 'motdepasse4'),
-  (5, 'utilisateur5', 'utilisateur5@gmail.com', 'motdepasse5'),
-  (6, 'utilisateur6', 'utilisateur6@gmail.com', 'motdepasse6');
+  (1, 'utilisateur1', 'utilisateur1@gmail.com', 'motdepasse1');
 
 -- Création de la table "Carts"
 CREATE TABLE Carts (

@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 function Product({ product }) {
+  const [quantity, setQuantity] = useState(1);
+  const [alertVisible, setAlertVisible] = useState(false);
+
   const handleAddToCart = () => {
-    const userId = 2 ; // Remplacez par l'ID de l'utilisateur actuel
+    const userId = 1; // pour le teste actuellement 
     const productId = product.id;
-    const quantity = 45; // Vous pouvez ajuster la quantité ici
 
     // Créez une requête GraphQL au format JSON
     const graphqlUrl = 'http://localhost:4000/graphql'; // Remplacez par l'URL de votre serveur GraphQL
@@ -15,16 +17,6 @@ function Product({ product }) {
             id
             username
             email
-            cart {
-              id
-              product {
-                id
-                name
-                price
-                inventory
-              }
-              quantity
-            }
           }
         }
       `,
@@ -41,6 +33,10 @@ function Product({ product }) {
       .then((response) => response.json())
       .then((data) => {
         console.log('Produit ajouté au panier :', data.data.addToCart);
+        setAlertVisible(true); // Afficher l'alerte
+        setTimeout(() => {
+          setAlertVisible(false); // Masquer l'alerte après quelques secondes (facultatif)
+        }, 3000); // Vous pouvez ajuster la durée d'affichage de l'alerte
       })
       .catch((error) => {
         console.error('Erreur lors de l\'ajout au panier :', error);
@@ -54,9 +50,25 @@ function Product({ product }) {
         <h5 className="card-title">{product.name}</h5>
         <p className="card-text">Prix : {product.price}</p>
         <p className="card-text">En stock : {product.inventory}</p>
-        <button className="btn btn-warning" onClick={handleAddToCart}>
-          Ajouter au panier
-        </button>
+        <div className="input-group mb-3">
+          <input
+            type="number"
+            className="form-control"
+            placeholder="Quantité"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+          <div className="input-group-append">
+            <button className="btn btn-warning" onClick={handleAddToCart}>
+              Ajouter au panier
+            </button>
+          </div>
+        </div>
+        {alertVisible && (
+          <div className="alert alert-success" role="alert">
+            <span style={{ color: 'green' }}>Produit ajouté au panier</span>
+          </div>
+        )}
       </div>
     </div>
   );

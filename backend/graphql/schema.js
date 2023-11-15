@@ -24,20 +24,23 @@ const typeDefs = gql`
     username: String!
     email: String!
     password: String!
+    cart: Cart  # Ajoutez cette ligne pour définir la relation entre User et Cart
   }
 
   type Query {
     products: [Product]
+    product(id: Int!): Product 
     user(id: ID!): User
     users: [User]
     userCart(userId: ID!): Cart
+    allCarts: [Cart]  # Nouvelle requête pour récupérer tous les paniers
   }
 
   type Mutation {
     addToCart(userId: ID!, productId: Int!, quantity: Int!): User
     removeFromCart(userId: ID!, productId: Int!): User
     clearCart(userId: ID!): User
-    purchaseCart(userId: ID!): User  # Ajouter une mutation pour l'achat du panier
+    purchaseCart(userId: ID!): User
     loginUser(username: String!, password: String!): User
   }
 `;

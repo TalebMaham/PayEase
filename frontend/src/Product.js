@@ -8,8 +8,8 @@ function Product({ product }) {
     const userId = 1; // pour le teste actuellement 
     const productId = product.id;
 
-    // Créez une requête GraphQL au format JSON
-    const graphqlUrl = 'http://localhost:4000/graphql'; // Remplacez par l'URL de votre serveur GraphQL
+    // Créer une requête GraphQL au format JSON
+    const graphqlUrl = 'http://localhost:4000/graphql'; 
     const graphqlQuery = {
       query: `
         mutation {
@@ -22,7 +22,7 @@ function Product({ product }) {
       `,
     };
 
-    // Effectuez une requête HTTP POST vers le serveur GraphQL
+    // Effectuer une requête HTTP POST vers le serveur GraphQL
     fetch(graphqlUrl, {
       method: 'POST',
       headers: {
@@ -36,7 +36,7 @@ function Product({ product }) {
         setAlertVisible(true); // Afficher l'alerte
         setTimeout(() => {
           setAlertVisible(false); // Masquer l'alerte après quelques secondes (facultatif)
-        }, 3000); // Vous pouvez ajuster la durée d'affichage de l'alerte
+        }, 3000); 
       })
       .catch((error) => {
         console.error('Erreur lors de l\'ajout au panier :', error);

@@ -4,7 +4,6 @@ function Cart() {
   const [carts, setCarts] = useState([]);
 
   useEffect(() => {
-    // Utilisez une requête GraphQL pour récupérer la liste de tous les paniers
     fetch('http://localhost:4000/graphql', {
       method: 'POST',
       headers: {
@@ -77,7 +76,7 @@ function Cart() {
   };
 
   const handlePurchase = (userId) => {
-    // Utilisez une requête GraphQL pour effectuer l'achat
+    // Utiliser une requête GraphQL pour effectuer l'achat
     fetch('http://localhost:4000/graphql', {
       method: 'POST',
       headers: {
@@ -96,7 +95,6 @@ function Cart() {
     })
       .then((response) => response.json())
       .then((data) => {
-        // Traitez la réponse ici, par exemple, affichez un message de confirmation
         console.log('Achat effectué avec succès!', data);
       })
       .catch((error) => console.error('Erreur lors de l\'achat', error));

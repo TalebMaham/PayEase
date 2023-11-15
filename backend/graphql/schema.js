@@ -24,7 +24,7 @@ const typeDefs = gql`
     username: String!
     email: String!
     password: String!
-    cart: Cart  # Ajoutez cette ligne pour définir la relation entre User et Cart
+    cart: Cart 
   }
 
   type Query {

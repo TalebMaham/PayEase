@@ -7,10 +7,10 @@ function ProductList() {
   const [products, setProducts] = useState([]);
 
   useEffect(() => {
-    // Définissez votre URL de serveur GraphQL
-    const graphqlUrl = 'http://localhost:4000/graphql'; // Remplacez par l'URL de votre serveur GraphQL
+    // Définisser votre URL de serveur GraphQL
+    const graphqlUrl = 'http://localhost:4000/graphql'; 
 
-    // Créez une requête GraphQL au format JSON
+    // Créer une requête GraphQL au format JSON
     const graphqlQuery = {
       query: `
         query {
@@ -24,7 +24,7 @@ function ProductList() {
       `,
     };
 
-    // Effectuez une requête HTTP POST vers le serveur GraphQL
+    // Effectuer une requête HTTP POST vers le serveur GraphQL
     fetch(graphqlUrl, {
       method: 'POST',
       headers: {

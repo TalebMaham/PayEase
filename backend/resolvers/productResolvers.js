@@ -22,7 +22,6 @@ const resolvers = {
             resolve(null); // Aucun utilisateur trouvé
           } else {
             const user = results[0];
-            // Vous pouvez formater les données ici si nécessaire
             resolve(user);
           }
         });
@@ -45,11 +44,11 @@ const resolvers = {
           if (error) {
             reject(error);
           } else {
-            // Rassemblez les éléments du panier à partir des résultats de la requête
+            // Rassembler les éléments du panier à partir des résultats de la requête
             const cartItems = [];
 
             for (const row of results) {
-              // Récupérez les détails du produit associé à cet élément du panier
+              // Récupérer les détails du produit associé à cet élément du panier
               const [productInfo] = await new Promise((resolve, reject) => {
                 db.query('SELECT * FROM Products WHERE id = ?', [row.productId], (error, productResults) => {
                   if (error) {
@@ -61,7 +60,7 @@ const resolvers = {
               });
 
               if (!productInfo) {
-                // Le produit associé n'a pas été trouvé, vous pouvez gérer cette situation comme vous le souhaitez
+                // Le produit associé n'a pas été trouvé . 
                 continue;
               }
 
@@ -79,7 +78,7 @@ const resolvers = {
               cartItems.push(cartItem);
             }
 
-            // Créez un objet Cart avec les éléments du panier
+            // Créer un objet Cart avec les éléments du panier
             const cart = {
               userId: args.userId,
               items: cartItems,
@@ -99,7 +98,6 @@ const resolvers = {
             resolve(null); // Aucun produit trouvé
           } else {
             const product = results[0];
-            // Vous pouvez formater les données ici si nécessaire
             resolve(product);
           }
         });
@@ -153,7 +151,6 @@ const resolvers = {
   Mutation: {
     addToCart: (parent, args) => {
       return new Promise((resolve, reject) => {
-        // Supposons que vous ayez une table CartItems pour gérer les éléments du panier
         db.query(
           'INSERT INTO CartItems (userId, productId, quantity) VALUES (?, ?, ?)',
           [args.userId, args.productId, args.quantity],
@@ -161,7 +158,7 @@ const resolvers = {
             if (error) {
               reject(error);
             } else {
-              // Vous pouvez retourner l'utilisateur mis à jour après l'ajout au panier
+             
               resolve(resolvers.Query.user(null, { id: args.userId }));
             }
           }
@@ -170,7 +167,6 @@ const resolvers = {
     },
     removeFromCart: (parent, args) => {
       return new Promise((resolve, reject) => {
-        // Supposons que vous ayez une table CartItems pour gérer les éléments du panier
         db.query(
           'DELETE FROM CartItems WHERE userId = ? AND productId = ?',
           [args.userId, args.productId],
@@ -178,7 +174,7 @@ const resolvers = {
             if (error) {
               reject(error);
             } else {
-              // Vous pouvez retourner l'utilisateur mis à jour après le retrait du produit du panier
+           
               resolve(resolvers.Query.user(null, { id: args.userId }));
             }
           }
@@ -187,12 +183,10 @@ const resolvers = {
     },
     clearCart: (parent, args) => {
       return new Promise((resolve, reject) => {
-        // Supposons que vous ayez une table CartItems pour gérer les éléments du panier
         db.query('DELETE FROM CartItems WHERE userId = ?', [args.userId], (error, results) => {
           if (error) {
             reject(error);
           } else {
-            // Vous pouvez retourner l'utilisateur mis à jour après avoir vidé le panier
             resolve(resolvers.Query.user(null, { id: args.userId }));
           }
         });
@@ -201,7 +195,7 @@ const resolvers = {
     purchaseCart: async (parent, args) => {
       const { userId } = args;
 
-      // Étape 1: Récupérez le contenu du panier de l'utilisateur
+      // Étape 1: Récupérer le contenu du panier de l'utilisateur
       const cartItems = await new Promise((resolve, reject) => {
         db.query('SELECT * FROM CartItems WHERE userId = ?', [userId], (error, results) => {
           if (error) {
@@ -216,7 +210,7 @@ const resolvers = {
         throw new Error('Aucun panier trouvé');
       }
 
-      // Étape 2: Vérifiez la disponibilité des produits dans le panier
+      // Étape 2: Vérifier la disponibilité des produits dans le panier
       for (const cartItem of cartItems) {
         const productId = cartItem.productId;
         const quantityInCart = cartItem.quantity;
@@ -236,7 +230,7 @@ const resolvers = {
         }
       }
 
-      // Étape 3: Effectuez l'achat en mettant à jour le stock des produits
+      // Étape 3: Effectuer l'achat en mettant à jour le stock des produits
       for (const cartItem of cartItems) {
         const productId = cartItem.productId;
         const quantityInCart = cartItem.quantity;
@@ -256,7 +250,7 @@ const resolvers = {
         });
       }
 
-      // Étape 4: Supprimez les éléments du panier après l'achat
+      // Étape 4: Supprimer les éléments du panier après l'achat
       await new Promise((resolve, reject) => {
         db.query('DELETE FROM CartItems WHERE userId = ?', [userId], (error, results) => {
           if (error) {
@@ -267,7 +261,7 @@ const resolvers = {
         });
       });
 
-      // Étape 5: Retournez l'utilisateur mis à jour
+      // Étape 5: Retourner l'utilisateur mis à jour
       const [updatedUser] = await new Promise((resolve, reject) => {
         db.query('SELECT * FROM Users WHERE id = ?', [userId], (error, results) => {
           if (error) {
@@ -287,7 +281,7 @@ const resolvers = {
     loginUser: async (parent, args) => {
       const { username, password } = args;
       try {
-        // Recherchez l'utilisateur dans la base de données par nom d'utilisateur et mot de passe
+        // Rechercher l'utilisateur dans la base de données par nom d'utilisateur et mot de passe
         const [user] = await new Promise((resolve, reject) => {
           db.query(
             'SELECT * FROM Users WHERE username = ? AND password = ?',
@@ -305,10 +299,6 @@ const resolvers = {
         if (!user) {
           throw new Error('Échec de l\'authentification');
         }
-
-        // Ici, vous pouvez gérer l'état d'authentification, par exemple en stockant l'ID de l'utilisateur dans une session
-        // Vous devrez mettre en œuvre la gestion de session côté serveur (par exemple, avec Express.js) pour cela
-
         return { ...user };
       } catch (error) {
         console.error(error);

@@ -9,7 +9,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 4000;
 
-// Configurez express-session
+// Configurer express-session
 app.use(
   session({
     secret: 'votre_secret_session',
@@ -18,7 +18,7 @@ app.use(
   })
 );
 
-// Configurez votre connexion à la base de données MySQL
+// Configurer votre connexion à la base de données MySQL
 const db = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -49,7 +49,7 @@ startServer().then(() => {
 // Route pour gérer la soumission du formulaire de connexion
 app.post('/login', (req, res) => {
   const { username, password } = req.body;
-  // Exécutez une requête SQL pour vérifier les identifiants
+  // Exécuter une requête SQL pour vérifier les identifiants
   db.query('SELECT * FROM users WHERE username = ? AND password = ?', [username, password], (err, results) => {
     if (err) {
       console.error(err);
@@ -61,7 +61,7 @@ app.post('/login', (req, res) => {
       const user = results[0];
       req.session.authenticated = true;
       req.session.user = user;
-      // Redirigez vers la page d'accueil du frontend (port 3000)
+      // Rediriger vers la page d'accueil du frontend (port 3000)
       res.status(200).send('Identifiants corrects');
     } else {
       res.status(401).send('Identifiants incorrects');
@@ -72,10 +72,10 @@ app.post('/login', (req, res) => {
 // Route pour la vérification de l'authentification
 app.get('/check-auth', (req, res) => {
   if (req.session.authenticated) {
-    // L'utilisateur est authentifié, renvoyez une réponse avec isAuthenticated: true
+    // L'utilisateur est authentifié, renvoyer une réponse avec isAuthenticated: true
     res.json({ isAuthenticated: true });
   } else {
-    // L'utilisateur n'est pas authentifié, renvoyez une réponse avec isAuthenticated: false
+    // L'utilisateur n'est pas authentifié, renvoyer une réponse avec isAuthenticated: false
     res.json({ isAuthenticated: false });
   }
 });

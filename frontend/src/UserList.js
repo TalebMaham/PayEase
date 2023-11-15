@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-import User from './User'; // Importez le composant User
+import User from './User';
 
 function UserList() {
   const [loading, setLoading] = useState(true);
@@ -8,10 +8,9 @@ function UserList() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    // Définissez votre URL de serveur GraphQL
-    const graphqlUrl = 'http://localhost:4000/graphql'; // Remplacez par l'URL de votre serveur GraphQL
+    const graphqlUrl = 'http://localhost:4000/graphql'; 
 
-    // Créez une requête GraphQL au format JSON
+    // Créer une requête GraphQL au format JSON
     const graphqlQuery = {
       query: `
         query {
@@ -24,7 +23,7 @@ function UserList() {
       `,
     };
 
-    // Effectuez une requête HTTP POST vers le serveur GraphQL
+    // Effectuer une requête HTTP POST vers le serveur GraphQL
     fetch(graphqlUrl, {
       method: 'POST',
       headers: {
@@ -61,7 +60,7 @@ function UserList() {
       <ul>
         {users.map((user) => (
           <li key={user.id}>
-            <User user={user} /> {/* Utilisez le composant User pour afficher chaque utilisateur */}
+            <User user={user} /> {/* Utiliser le composant User pour afficher chaque utilisateur */}
           </li>
         ))}
       </ul>

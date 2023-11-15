@@ -20,7 +20,7 @@ J'ai implémenté les fonctionnalités suivantes dans l'application :
 
 3. **Commandes** : Après avoir passé une commande, une entrée est automatiquement créée dans la base de données, enregistrant le prix total de la commande ainsi que les détails de chaque article de la commande. De plus, le stock de produits est mis à jour pour refléter les produits achetés.
 
-Je suis fier du travail accompli dans le cadre de ce test technique, et j'ai pris soin de suivre les meilleures pratiques de développement tout au long du processus. L'application que j'ai créée est fonctionnelle et répond aux exigences spécifiées dans la description du projet.
+
 
 
 Cordialement,

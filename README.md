@@ -346,7 +346,7 @@ Pour préparer l'environnement de l'application, suivez ces étapes pour configu
    ```sql
    CREATE DATABASE products;
    ```
-Une fois la base de données "products" créée, assurez-vous d'être dans le répertoire de votre projet backend.
+Une fois la base de données "products" créée, assurez-vous d'être dans le répertoire de votre projet bradly.
 
 Lancez le script d'initialisation en exécutant le fichier "initialisation.bat". Ce script chargera les données initiales dans la base de données, y compris les produits et un utilisateur prêt à être authentifié.
 

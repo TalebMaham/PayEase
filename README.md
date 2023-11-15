@@ -148,6 +148,169 @@ Le fichier `Cart.js` représente un composant de l'application frontend qui affi
 6. **Gestion des Erreurs** : Le composant `Cart.js` gère les erreurs potentielles lors de la récupération des données et de l'achat, en affichant des messages d'erreur appropriés.
 
 
+# Documentation du Code - Backend (server.js)
+
+Le fichier `server.js` représente le point d'entrée de l'application côté serveur. Il s'agit d'une application GraphQL construite avec Express.js et Apollo Server, permettant de gérer les fonctionnalités de l'application de paiement. Cette documentation explique les principales fonctionnalités et configurations de `server.js`.
+
+## Configuration de l'Application
+
+### Middleware pour Express
+
+1. **express-session** : Nous utilisons le middleware `express-session` pour gérer les sessions utilisateur. Les sessions sont utilisées pour maintenir l'état d'authentification des utilisateurs entre les requêtes.
+
+2. **mysql2** : Le module `mysql2` est utilisé pour configurer la connexion à la base de données MySQL. Il nous permet d'interagir avec la base de données pour vérifier les identifiants utilisateur lors de la connexion.
+
+3. **cors** : Le middleware `cors` est utilisé pour permettre les requêtes Cross-Origin (CORS) depuis l'application frontend, qui s'exécute sur `http://localhost:3000`. Les options `origin` et `credentials` sont configurées pour permettre le partage des cookies d'authentification.
+
+### Configuration d'Apollo Server
+
+4. **Apollo Server** : Nous configurons Apollo Server avec les schémas GraphQL (`typeDefs`) et les résolveurs (`resolvers`) nécessaires pour gérer les requêtes GraphQL.
+
+## Démarrage du Serveur
+
+5. **Démarrage du Serveur** : Nous utilisons une fonction asynchrone `startServer` pour démarrer Apollo Server. Une fois Apollo Server prêt, nous appliquons son middleware à l'application Express.
+
+6. **Écoute du Serveur** : Enfin, nous écoutons les requêtes entrantes sur le port spécifié (par défaut, le port 4000) et affichons un message indiquant que le serveur GraphQL est prêt à l'écoute.
+
+## Gestion de l'Authentification
+
+7. **Route de Connexion (`/login`)** : Cette route gère la soumission du formulaire de connexion. Elle reçoit les données d'authentification de l'utilisateur (nom d'utilisateur et mot de passe) via une requête POST. Le serveur exécute ensuite une requête SQL pour vérifier les identifiants par rapport à la base de données MySQL.
+
+8. **Redirection et État de Session** : Si les identifiants sont corrects, l'utilisateur est redirigé vers la page d'accueil de l'application frontend (port 3000) avec un statut 200 indiquant que les identifiants sont corrects. De plus, l'état d'authentification de la session est mis à jour pour indiquer que l'utilisateur est authentifié.
+
+9. **Vérification de l'Authentification (`/check-auth`)** : Cette route permet de vérifier l'état d'authentification de l'utilisateur. Si l'utilisateur est authentifié, elle renvoie une réponse avec `isAuthenticated: true`. Sinon, elle renvoie `isAuthenticated: false`.
+
+10. **Déconnexion (`/logout`)** : Cette route permet à l'utilisateur de se déconnecter. Elle révoque l'authentification en mettant à jour l'état de la session et renvoie un statut 200 indiquant que la déconnexion a été effectuée avec succès.
+
+# Documentation du Code - Backend (db.js)
+
+Le fichier `db.js` représente le module responsable de la configuration et de la gestion de la connexion à la base de données MySQL. Cette documentation explique les principales fonctionnalités et configurations de `db.js`.
+
+## Configuration de la Connexion à la Base de Données
+
+### Module MySQL
+
+1. **mysql** : Nous utilisons le module `mysql` pour établir une connexion à la base de données MySQL. Ce module nous permet d'interagir avec la base de données pour effectuer des opérations de lecture et d'écriture.
+
+### Paramètres de Connexion
+
+2. **Paramètres de Connexion** : Nous configurons la connexion à la base de données en spécifiant les informations nécessaires :
+   - **host** : L'adresse du serveur MySQL (dans ce cas, 'localhost' pour une base de données locale).
+   - **user** : Le nom d'utilisateur pour la connexion à la base de données.
+   - **password** : Le mot de passe associé à l'utilisateur.
+   - **database** : Le nom de la base de données à laquelle se connecter.
+
+## Établissement de la Connexion
+
+3. **Établissement de la Connexion** : Après avoir configuré les paramètres de connexion, nous établissons la connexion à la base de données en utilisant la méthode `connect()` du module MySQL. Cette étape permet de se connecter au serveur MySQL.
+
+4. **Exportation du Module** : Enfin, nous exportons l'objet de connexion à la base de données en tant que module, de manière à ce qu'il puisse être utilisé dans d'autres parties de l'application pour effectuer des opérations sur la base de données.
+
+# Documentation du Code - GraphQL Schema (schema.js)
+
+Le fichier `schema.js` définit le schéma GraphQL utilisé dans l'application. Cette documentation explique les types, les requêtes et les mutations définis dans le schéma GraphQL.
+
+## Types GraphQL
+
+### Type "Product"
+
+- **id** (Int!) : Identifiant unique du produit.
+- **name** (String!) : Nom du produit.
+- **price** (Float!) : Prix du produit.
+- **inventory** (Int!) : Stock disponible du produit.
+
+### Type "CartItem"
+
+- **id** (Int!) : Identifiant unique de l'élément du panier.
+- **product** (Product!) : Référence au produit ajouté au panier.
+- **quantity** (Int!) : Quantité du produit dans le panier.
+
+### Type "Cart"
+
+- **userId** (ID!) : Identifiant de l'utilisateur auquel appartient le panier.
+- **items** ([CartItem]!) : Liste des éléments du panier.
+
+### Type "User"
+
+- **id** (ID!) : Identifiant unique de l'utilisateur.
+- **username** (String!) : Nom d'utilisateur de l'utilisateur.
+- **email** (String!) : Adresse e-mail de l'utilisateur.
+- **password** (String!) : Mot de passe de l'utilisateur.
+- **cart** (Cart) : Panier de l'utilisateur (relation).
+
+## Requêtes GraphQL
+
+- **products** : Renvoie une liste de produits.
+- **product(id: Int!)** : Renvoie un produit spécifique en fonction de son identifiant.
+- **user(id: ID!)** : Renvoie un utilisateur spécifique en fonction de son identifiant.
+- **users** : Renvoie une liste d'utilisateurs.
+- **userCart(userId: ID!)** : Renvoie le panier d'un utilisateur spécifique en fonction de son identifiant.
+- **allCarts** : Renvoie une liste de tous les paniers.
+
+## Mutations GraphQL
+
+- **addToCart(userId: ID!, productId: Int!, quantity: Int!)** : Ajoute un produit au panier d'un utilisateur avec la quantité spécifiée.
+- **removeFromCart(userId: ID!, productId: Int!)** : Supprime un produit du panier d'un utilisateur.
+- **clearCart(userId: ID!)** : Vide le panier d'un utilisateur.
+- **purchaseCart(userId: ID!)** : Finalise l'achat des produits dans le panier de l'utilisateur.
+- **loginUser(username: String!, password: String!)** : Authentifie un utilisateur en vérifiant les identifiants.
+
+
+# Documentation du Code - Résolveurs GraphQL (productResolvers.js)
+
+Le fichier `productResolvers.js` contient les résolveurs GraphQL qui définissent comment les requêtes et les mutations sont traitées dans l'application. Cette documentation explique les résolveurs et leurs fonctionnalités.
+
+## Résolveurs GraphQL
+
+### Résolveur "Query"
+
+#### Requête "products"
+
+- Renvoie une liste de produits depuis la base de données.
+
+#### Requête "user"
+
+- Renvoie un utilisateur spécifique en fonction de son identifiant depuis la base de données.
+
+#### Requête "users"
+
+- Renvoie une liste d'utilisateurs depuis la base de données.
+
+#### Requête "userCart"
+
+- Renvoie le panier d'un utilisateur spécifique en fonction de son identifiant depuis la base de données. Les éléments du panier sont rassemblés à partir des données stockées dans la table "CartItems".
+
+#### Requête "allCarts"
+
+- Renvoie une liste de tous les paniers. Pour chaque panier, les éléments du panier sont extraits depuis la base de données en fonction de l'identifiant de l'utilisateur.
+
+### Résolveur "Mutation"
+
+#### Mutation "addToCart"
+
+- Ajoute un produit au panier d'un utilisateur avec la quantité spécifiée. Les données sont insérées dans la table "CartItems" de la base de données.
+
+#### Mutation "removeFromCart"
+
+- Supprime un produit du panier d'un utilisateur. Les données sont supprimées de la table "CartItems" de la base de données.
+
+#### Mutation "clearCart"
+
+- Vide le panier d'un utilisateur. Les données correspondantes sont supprimées de la table "CartItems" de la base de données.
+
+#### Mutation "purchaseCart"
+
+- Finalise l'achat des produits dans le panier de l'utilisateur en mettant à jour le stock des produits dans la base de données.
+
+#### Mutation "loginUser"
+
+- Authentifie un utilisateur en vérifiant les identifiants dans la base de données.
+
+## Fonctionnement des Résolveurs
+
+Les résolveurs utilisent des requêtes SQL pour interagir avec la base de données MySQL. Ils gèrent les opérations de lecture (requêtes) et d'écriture (mutations) en renvoyant les données appropriées ou en effectuant des modifications dans la base de données.
+
+Les résolveurs assurent également la manipulation des données et la gestion des erreurs lors de l'interaction avec la base de données.
 
 Cordialement,
 

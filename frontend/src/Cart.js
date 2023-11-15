@@ -104,7 +104,7 @@ function Cart() {
 
   return (
     <div>
-      <h2>Liste de Paniers</h2>
+      <h2>Panier</h2>
       {carts.map((cart) => (
         <div key={cart.userId} className="card">
           <div className="card-body">

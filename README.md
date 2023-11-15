@@ -49,14 +49,16 @@ Le fichier `Login.js` est un composant essentiel de l'application frontend qui g
 ## Fonctionnalités Principales
 
 1. **Formulaire de Connexion** : Le composant `Login.js` affiche un formulaire de connexion qui permet aux utilisateurs de saisir leur nom d'utilisateur et leur mot de passe.
-![Authentification Bradly](auth_bradly.png)
+
+![Bradly](auth_bradly.png)
 
 2. **Gestion de l'Authentification** : Lorsque l'utilisateur soumet le formulaire, le composant envoie une requête POST à l'API backend avec les informations d'authentification. Si l'authentification est réussie (statut 200), il met à jour l'état d'authentification dans le composant parent (généralement `App.js`) en utilisant la fonction `setIsAuthenticated` passée en tant que prop.
 
 3. **Redirection après l'Authentification** : Après une authentification réussie, l'utilisateur est redirigé vers la page d'accueil de l'application en utilisant le routeur de navigation.
 
 4. **Gestion des Erreurs** : Le composant `Login.js` gère également les erreurs potentielles en cas d'échec de l'authentification ou en cas d'erreur lors de la requête vers l'API backend. Il affiche des messages d'erreur appropriés à l'utilisateur en cas de problème.
-![Authentification Bradly](gestion_err_auth.png)
+
+![Bradly](gestion_err_auth.png)
 
 5. **Saisie Contrôlée** : Les champs de saisie du nom d'utilisateur et du mot de passe sont des champs de saisie contrôlée, ce qui signifie que leur valeur est gérée par l'état du composant et mise à jour en fonction des modifications de l'utilisateur.
 
@@ -70,7 +72,8 @@ Le fichier `Product.js` représente un composant de l'application frontend qui p
 1. **Affichage des Détails du Produit** : Le composant `Product.js` affiche les détails du produit, y compris le nom du produit, le prix, la disponibilité en stock et une image représentative.
 
 2. **Saisie de la Quantité** : Les utilisateurs peuvent spécifier la quantité du produit qu'ils souhaitent ajouter au panier en utilisant un champ de saisie numérique.
-![Authentification Bradly](definir_stock.png)
+
+![Bradly](definir_stock.png)
 
 
 3. **Ajout au Panier** : Lorsque l'utilisateur appuie sur le bouton "Ajouter au panier", le composant envoie une requête GraphQL au serveur backend pour ajouter le produit au panier. Il gère également l'affichage d'une alerte pour indiquer que le produit a été ajouté avec succès.
@@ -97,7 +100,7 @@ Le fichier `ProductList.js` représente un composant de l'application frontend q
 
 5. **Utilisation du Composant Product** : Le composant `ProductList.js` utilise le composant `Product` pour afficher chaque produit de manière répétée.
 
-![Authentification Bradly](liste_des_produits.png)
+![Bradly](liste_des_produits.png)
 
 # Documentation du Code - Frontend (Cart.js)
 
@@ -113,11 +116,12 @@ Le fichier `Cart.js` représente un composant de l'application frontend qui affi
 3. **Affichage des Paniers** : Le composant `Cart.js` affiche les paniers sous forme de cartes. Chaque carte représente un panier d'utilisateur et inclut la liste des produits, la quantité et le prix total à payer.
 
 4. **Calcul du Prix Total** : Le composant calcule le prix total à payer en fonction de la quantité de chaque produit dans le panier et affiche ce prix total.
-![Authentification Bradly](panier.png)
+
+![Bradly](panier.png)
 
 5. **Achat des Paniers** : Pour chaque panier, l'utilisateur peut cliquer sur le bouton "Acheter" pour finaliser l'achat. Le composant envoie une requête GraphQL pour effectuer l'achat.
 
-![Authentification Bradly](achat_effectué.png)
+![Bradly](achat_effectué.png)
 
 6. **Gestion des Erreurs** : Le composant `Cart.js` gère les erreurs potentielles lors de la récupération des données et de l'achat, en affichant des messages d'erreur appropriés.
 

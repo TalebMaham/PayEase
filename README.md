@@ -392,6 +392,27 @@ Voici un scénario typique que vous pouvez suivre pour tester l'application :
 
 Ceci conclut le scénario nominal de test de l'application.
 
+
+## Gestion de la Cohérence des Stocks
+
+L'application assure la cohérence des stocks grâce à un mécanisme de verrouillage temporaire lorsqu'un utilisateur ajoute un produit à son panier et lorsqu'il passe une commande. Voici comment cela fonctionne techniquement :
+
+### Ajout d'un produit au panier :
+- Lorsqu'un utilisateur ajoute un produit à son panier, l'application envoie une requête au serveur.
+- Le serveur commence par vérifier si la quantité demandée est disponible en stock. Cette vérification est effectuée au niveau de la base de données. Si la quantité demandée est disponible, le serveur commence le processus d'ajout au panier.
+- Avant d'ajouter le produit au panier, le serveur acquiert un verrou temporaire sur le produit en stock pour éviter les conditions de course. Cela signifie que pendant que le serveur effectue cette opération, d'autres demandes d'ajout du même produit seront mises en attente.
+- Une fois le verrou acquis, le produit est ajouté au panier de l'utilisateur et la quantité en stock est mise à jour dans la base de données pour refléter la quantité restante après l'ajout.
+
+### Achat des produits dans le panier :
+- Lorsqu'un utilisateur décide d'acheter les produits de son panier, l'application envoie une requête au serveur pour effectuer l'achat.
+- Le serveur commence par vérifier à nouveau si les quantités demandées sont toujours disponibles en stock, en prenant en compte les verrous temporaires précédemment acquis.
+- Si toutes les vérifications réussissent, le serveur effectue les mises à jour des stocks en déduisant les quantités achetées de la base de données.
+- Pendant cette opération, le serveur maintient les verrous temporaires sur les produits pour empêcher d'autres utilisateurs de les acheter en même temps.
+- Une fois les mises à jour effectuées avec succès, les verrous sont libérés.
+
+### Vidage du panier :
+- Une fois que les produits ont été achetés avec succès, le serveur supprime tous les éléments du panier de l'utilisateur dans la base de données.
+
 Remarque : 
 ## Remarques sur l'Application
 

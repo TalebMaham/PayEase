@@ -50,8 +50,11 @@ Le fichier `Login.js` est un composant essentiel de l'application frontend qui g
 
 1. **Formulaire de Connexion** : Le composant `Login.js` affiche un formulaire de connexion qui permet aux utilisateurs de saisir leur nom d'utilisateur et leur mot de passe.
 
-![Bradly](auth_bradly.png)
-*Image de l'authentification utilisateur*
+<div align="center">
+  <img src="auth_bradly.png" alt="Image de l'authentification utilisateur" />
+  <p style="text-align: center;">Image de l'authentification utilisateur</p>
+</div>
+
 
 2. **Gestion de l'Authentification** : Lorsque l'utilisateur soumet le formulaire, le composant envoie une requête POST à l'API backend avec les informations d'authentification. Si l'authentification est réussie (statut 200), il met à jour l'état d'authentification dans le composant parent (généralement `App.js`) en utilisant la fonction `setIsAuthenticated` passée en tant que prop.
 

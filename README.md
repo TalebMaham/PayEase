@@ -7,7 +7,7 @@ L'objectif du test était de créer une petite application de paiement en utilis
 
 - **Frontend** : J'ai choisi d'utiliser React pour développer l'interface utilisateur. J'ai créé une interface conviviale et intuitive qui permet aux utilisateurs de naviguer facilement dans l'application.
 
-- **Backend** : J'ai développé une API en utilisant Node.js et Express.js. Cette API gère toutes les fonctionnalités nécessaires pour le processus de paiement, y compris la gestion du panier et des commandes.
+- **Backend** : J'ai développé une API en utilisant GraphQL avec Node.js et Express.js. Cette API gère toutes les fonctionnalités nécessaires pour le processus de paiement, y compris la gestion du panier et des commandes.
 
 - **Base de données** : J'ai reçu un script MySQL pour créer une table de produits. En plus de cela, j'ai créé toutes les autres tables nécessaires pour stocker les informations sur les utilisateurs, les commandes et les détails des produits.
 
@@ -19,9 +19,6 @@ J'ai implémenté les fonctionnalités suivantes dans l'application :
 2. **Page de Paiement** : Une fois les produits ajoutés au panier, les utilisateurs peuvent se diriger vers une page de paiement où ils peuvent finaliser la commande.
 
 3. **Commandes** : Après avoir passé une commande, une entrée est automatiquement créée dans la base de données, enregistrant le prix total de la commande ainsi que les détails de chaque article de la commande. De plus, le stock de produits est mis à jour pour refléter les produits achetés.
-
-
-
 
 Cordialement,
 

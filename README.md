@@ -336,6 +336,63 @@ Pour lancer l'application, suivez ces étapes :
 3. Ensuite, démarrez l'application frontend en exécutant la commande :
    npm start
 
+```
+## Configuration de la Base de Données
+
+Pour préparer l'environnement de l'application, suivez ces étapes pour configurer la base de données et ajouter des données initiales :
+
+1. Créez une base de données MySQL nommée "products" en utilisant votre outil de gestion de bases de données préféré. Vous pouvez utiliser la commande SQL suivante :
+
+   ```sql
+   CREATE DATABASE products;
+   ```
+Une fois la base de données "products" créée, assurez-vous d'être dans le répertoire de votre projet backend.
+
+Lancez le script d'initialisation en exécutant le fichier "initialisation.bat". Ce script chargera les données initiales dans la base de données, y compris les produits et un utilisateur prêt à être authentifié.
+
+# Exécutez le script d'initialisation depuis le répertoire backend
+initialisation.bat
+
+À présent, la base de données "products" est remplie avec des produits simulés, et un utilisateur préconfiguré est disponible pour l'authentification dans l'application.
+
+
+## Scénario Nominale de Test
+
+Voici un scénario typique que vous pouvez suivre pour tester l'application :
+
+1. Allez sur la page d'accueil en ouvrant votre navigateur et en accédant à l'URL `http://localhost:3000/`.
+
+2. Vous serez redirigé vers la page d'authentification car l'application nécessite une connexion.
+
+3. Entrez n'importe quoi comme nom d'utilisateur et mot de passe, vous verrez un message d'erreur d'authentification s'afficher.
+
+4. Entrez les informations suivantes pour vous connecter :
+   - Nom d'utilisateur : utilisateur1
+   - Mot de passe : motdepasse1
+
+5. Après une authentification réussie, vous serez redirigé vers la liste des produits disponibles.
+
+6. Choisissez le produit que vous souhaitez acheter en cliquant sur son nom ou sa description.
+
+7. Sur la page de détails du produit, sélectionnez la quantité que vous souhaitez acheter.
+
+8. Cliquez sur le bouton "Ajouter au panier" pour ajouter le produit à votre panier.
+
+9. Vous pouvez répéter les étapes 6 à 8 pour ajouter plusieurs produits à votre panier.
+
+10. Ensuite, accédez à la page du panier en cliquant sur le lien "Panier" dans la barre de menu.
+
+11. Vous serez redirigé vers votre panier, où vous pourrez voir les détails de chaque produit que vous avez ajouté.
+
+12. Vous aurez la possibilité de vérifier les détails de votre commande, y compris les produits, les quantités et les prix.
+
+13. Vous pouvez choisir d'acheter la commande en cliquant sur le bouton "Acheter".
+
+14. Après avoir acheté la commande, actualisez la page, vous verrez que le panier est devenu vide, le total est remis à zéro, et le stock des produits dans la base de données est mis à jour en conséquence.
+
+Ceci conclut le scénario nominal de test de l'application.
+
+
 
 
 Cordialement,

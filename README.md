@@ -399,8 +399,6 @@ L'application actuelle est fonctionnelle mais présente des opportunités d'amé
 
 Mon intention était de créer une application de base pour la gestion de produits et de paniers, avec une fonctionnalité d'authentification rudimentaire. Cependant, en raison de contraintes de temps, certaines fonctionnalités, telles que la gestion complète des utilisateurs et la mise en œuvre de tests automatisés, n'ont pas été finalisées.
 
-Je suis pleinement conscient des lacunes de l'application, mais je tiens à assurer aux utilisateurs que je reste déterminé à l'améliorer au fil du temps. Vos retours et commentaires seront précieux pour guider les futures mises à jour et améliorations de l'application.
-
 L'un des composants, "User.js", devait initialement servir de base pour la gestion des utilisateurs, notamment les gestionnaires internes et les clients externes. Cependant, en raison des contraintes de temps, cette fonctionnalité n'a pas encore été pleinement développée.
 
 

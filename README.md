@@ -1,6 +1,4 @@
-# Rapport sur le Test Technique - Création d'une Application de Paiement
-
-Je tiens à vous remercier pour l'opportunité que vous m'avez donnée de participer au test technique pour le poste de Fullstack Developer en alternance chez The Bradery. Je suis ravi de partager avec vous le travail que j'ai accompli dans le cadre de ce test.
+#  Création d'une Application de Paiement
 
 ## Objectif
 L'objectif du test était de créer une petite application de paiement en utilisant les technologies suivantes :
